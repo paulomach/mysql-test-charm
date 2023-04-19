@@ -34,6 +34,11 @@ class LegacyMySQL(Object):
             # only leader handles the relation data
             return
 
+        if not self.model.get_relation(LEGACY_MYSQL_RELATION):
+            # Relation departed before joined event
+            logger.debug("Relation departed")
+            return
+
         # On legacy MariaDB, the relation data is stored on
         # leader unit databag only.
         try:
