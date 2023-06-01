@@ -122,16 +122,18 @@ class MySQLTestApplication(CharmBase):
         if self.model.get_relation(DATABASE_RELATION):
             data = list(self.database.fetch_relation_data().values())[0]
 
-            username, password, endpoints = (
+            username, password, endpoints, database = (
                 data.get("username"),
                 data.get("password"),
                 data.get("endpoints"),
+                data.get("database")
             )
         elif self.model.get_relation(LEGACY_MYSQL_RELATION):
             username = self.app_peer_data.get(f"{LEGACY_MYSQL_RELATION}-user")
             password = self.app_peer_data.get(f"{LEGACY_MYSQL_RELATION}-password")
             endpoints = self.app_peer_data.get(f"{LEGACY_MYSQL_RELATION}-host")
             endpoints = f"{endpoints}:3306"
+            database = self.app_peer_data.get(f"{LEGACY_MYSQL_RELATION}-database")
         else:
             return {}
         if None in [username, password, endpoints]:
@@ -140,7 +142,7 @@ class MySQLTestApplication(CharmBase):
         config = {
             "user": username,
             "password": password,
-            "database": DATABASE_NAME,
+            "database": database,
         }
         if endpoints.startswith("file://"):
             config["unix_socket"] = endpoints[7:]
@@ -215,7 +217,7 @@ class MySQLTestApplication(CharmBase):
 
         with MySQLConnector(self._database_config) as cursor:
             cursor.execute(
-                f"SELECT MAX(number) FROM `{DATABASE_NAME}`.`{CONTINUOUS_WRITE_TABLE_NAME}`;"
+                f"SELECT MAX(number) FROM `{self._database_config['database']}`.`{CONTINUOUS_WRITE_TABLE_NAME}`;"
             )
             return cursor.fetchone()[0]
 
@@ -278,7 +280,7 @@ class MySQLTestApplication(CharmBase):
         self._stop_continuous_writes()
         with MySQLConnector(self._database_config) as cursor:
             cursor.execute(
-                f"DROP TABLE IF EXISTS `{DATABASE_NAME}`.`{CONTINUOUS_WRITE_TABLE_NAME}`;"
+                f"DROP TABLE IF EXISTS `{self._database_config['database']}`.`{CONTINUOUS_WRITE_TABLE_NAME}`;"
             )
 
     def _on_start_continuous_writes_action(self, _) -> None:

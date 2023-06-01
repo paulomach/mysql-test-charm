@@ -5,9 +5,8 @@
 
 import logging
 
-from literals import DATABASE_NAME, LEGACY_MYSQL_RELATION
+from literals import LEGACY_MYSQL_RELATION
 from ops.framework import Object
-from ops.model import BlockedStatus
 
 logger = logging.getLogger(__name__)
 
@@ -56,10 +55,6 @@ class LegacyMySQL(Object):
             return
 
         database_name = relation_data["database"]
-        if database_name != DATABASE_NAME:
-            logger.error(f"Database name must be set to `{DATABASE_NAME}`. Modify the test.")
-            self.charm.unit.status = BlockedStatus("Wrong database name")
-            return
 
         # Dump data into peer relation
         self.charm.app_peer_data[f"{LEGACY_MYSQL_RELATION}-user"] = relation_data["user"]
