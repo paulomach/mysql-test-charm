@@ -1,4 +1,5 @@
 # MySQL Test Application
+[![Get it from the Charmhub](https://charmhub.io/mysql-test-app/badge.svg)](https://charmhub.io/mysql-test-app)
 
 MySQL stack tester charm - this is a simple application used exclusively for integrations test of
 [mysql-k8s][mysql-k8s], [mysql][mysql], [mysql-router-k8s][mysql-router-k8s],
