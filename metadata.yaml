@@ -1,12 +1,12 @@
-# Copyright 2022 Canonical Ltd.
+# Copyright 2023 Canonical Ltd.
 # See LICENSE file for licensing details.
 
 name: mysql-test-app
-description: |
-  An application charm used in high availability MySQL k8s/vm integration tests.
 summary: |
+  Test application used in high availability MySQL K8s/VM integration tests.
+description: |
   Data platform libs application meant to be used
-  only for testing high availability of the MySQL charm.
+  only for testing high availability of the MySQL charms.
 
 requires:
   database:
