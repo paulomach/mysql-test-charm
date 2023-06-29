@@ -7,6 +7,7 @@ import logging
 
 from literals import DATABASE_NAME, LEGACY_MYSQL_RELATION
 from ops.framework import Object
+from ops.model import BlockedStatus
 
 logger = logging.getLogger(__name__)
 
