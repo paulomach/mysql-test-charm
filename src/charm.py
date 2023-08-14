@@ -158,6 +158,8 @@ class MySQLTestApplication(CharmBase):
     def _start_continuous_writes(self, starting_number: int) -> None:
         """Start continuous writes to the MySQL cluster."""
         if not self._database_config:
+            # don't start if no database config is available
+            logger.debug("Won't start continuous writes: missing database config")
             return
 
         self._stop_continuous_writes()
@@ -305,13 +307,19 @@ class MySQLTestApplication(CharmBase):
 
     def _on_endpoints_changed(self, _) -> None:
         """Handle the database endpoints changed event."""
-        count = self._max_written_value()
-        self._start_continuous_writes(count + 1)
+        if self.config["auto_start_writes"]:
+            count = self._max_written_value()
+            self._start_continuous_writes(count + 1)
+        else:
+            logger.debug("Won't start continuous writes: auto_start_writes is false")
 
     def _on_peer_relation_changed(self, _) -> None:
         """Handle common post database estabilshed tasks."""
         if self.app_peer_data.get("database-start") == "true":
-            self._start_continuous_writes(1)
+            if self.config["auto_start_writes"]:
+                self._start_continuous_writes(1)
+            else:
+                logger.debug("Won't start continuous writes: auto_start_writes is false")
 
             if self.unit.is_leader():
                 value = self._write_random_value()
