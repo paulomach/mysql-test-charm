@@ -23,12 +23,12 @@ Actions are listed on [actions page](https://charmhub.io/mysql-test-app/actions)
 
 ## References
 * [MySQL Test App](https://charmhub.io/mysql-test-app)
-* [mysql-k8s]: https://charmhub.io/mysql-k8s
-* [mysql]: https://charmhub.io/mysql
-* [mysql-router-k8s]: https://charmhub.io/mysql-router-k8s
-* [mysql-router]: https://charmhub.io/mysql-router?channel=dpe/edge
-* [mysql-bundle-k8s]: https://charmhub.io/mysql-bundle-k8s
-* [mysql-bundle]: https://charmhub.io/mysql-bundle
+* [mysql-k8s](https://charmhub.io/mysql-k8s)
+* [mysql](https://charmhub.io/mysql)
+* [mysql-router-k8s](https://charmhub.io/mysql-router-k8s)
+* [mysql-router](https://charmhub.io/mysql-router?channel=dpe/edge)
+* [mysql-bundle-k8s](https://charmhub.io/mysql-bundle-k8s)
+* [mysql-bundle](https://charmhub.io/mysql-bundle)
 * [MySQL Test App at Charmhub](https://charmhub.io/mysql-test-app)
 * [PostgreSQL Test App](https://charmhub.io/postgresql-test-app)
 
