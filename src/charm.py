@@ -82,6 +82,9 @@ class MySQLTestApplication(CharmBase):
             getattr(self.database.on, "endpoints_changed"), self._on_endpoints_changed
         )
         self.framework.observe(
+            self.on[DATABASE_RELATION].relation_changed, self._on_relation_changed
+        )
+        self.framework.observe(
             self.on[DATABASE_RELATION].relation_broken, self._on_relation_broken
         )
         self.framework.observe(
@@ -328,6 +331,13 @@ class MySQLTestApplication(CharmBase):
                 self.app_peer_data["database-start"] = "done"
 
             self.unit.status = ActiveStatus()
+
+    def _on_relation_changed(self, _) -> None:
+        """Handle the database relation broken event."""
+        if self._database_config:
+            self.unit.status = ActiveStatus()
+        else:
+            self.unit.status = WaitingStatus()
 
     def _on_relation_broken(self, _) -> None:
         """Handle the database relation broken event."""
