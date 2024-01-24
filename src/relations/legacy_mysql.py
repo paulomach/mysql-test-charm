@@ -6,7 +6,7 @@
 import logging
 
 from literals import DATABASE_NAME, LEGACY_MYSQL_RELATION
-from ops.framework import Object
+from ops import Object, RelationChangedEvent
 from ops.model import BlockedStatus
 
 logger = logging.getLogger(__name__)
@@ -24,6 +24,9 @@ class LegacyMySQL(Object):
         )
         self.framework.observe(
             charm.on[LEGACY_MYSQL_RELATION].relation_broken, self._on_relation_broken
+        )
+        self.framework.observe(
+            charm.on[LEGACY_MYSQL_RELATION].relation_changed, self._on_relation_changed
         )
         self.framework.observe(
             charm.on.get_legacy_mysql_credentials_action, self._get_legacy_mysql_credentials
@@ -90,3 +93,13 @@ class LegacyMySQL(Object):
                 "database": self.charm.app_peer_data[f"{LEGACY_MYSQL_RELATION}-database"],
             }
         )
+
+    def _on_relation_changed(self, event: RelationChangedEvent) -> None:
+        """Refresh connection data."""
+        if not self.charm.unit.is_leader():
+            # only leader handles the relation data
+            return
+
+        relation_data = event.relation.data[event.unit]
+        # Dump data into peer relation
+        self.charm.app_peer_data[f"{LEGACY_MYSQL_RELATION}-host"] = relation_data["host"]
