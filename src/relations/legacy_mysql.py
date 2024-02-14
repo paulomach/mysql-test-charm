@@ -102,4 +102,8 @@ class LegacyMySQL(Object):
 
         relation_data = event.relation.data[event.unit]
         # Dump data into peer relation
-        self.charm.app_peer_data[f"{LEGACY_MYSQL_RELATION}-host"] = relation_data["host"]
+        try:
+            self.charm.app_peer_data[f"{LEGACY_MYSQL_RELATION}-host"] = relation_data["host"]
+        except KeyError:
+            # only leader unit has the relation data
+            pass
