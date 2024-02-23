@@ -1,7 +1,7 @@
 # MySQL Test Application
 [![Charmhub Badge](https://charmhub.io/mysql-test-app/badge.svg)](https://charmhub.io/mysql-test-app)
 [![Release](https://github.com/canonical/mysql-test-app/actions/workflows/release.yaml/badge.svg)](https://github.com/canonical/mysql-test-app/actions/workflows/release.yaml)
-[![Tests](https://github.com/canonical/mysql-test-app/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/canonical/mysql-test-app/actions/workflows/ci.yaml?query=branch%3Amain)
+[![Tests](https://github.com/canonical/mysql-test-app/actions/workflows/ci.yaml/badge.svg?branch=main)](https://github.com/canonical/mysql-test-app/actions/workflows/ci.yaml)
 
 MySQL test charm - is a simple application used exclusively for various tests of
 various tests of "Charmed MySQL" charms (see the "References" section).
