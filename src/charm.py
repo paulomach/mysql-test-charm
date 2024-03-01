@@ -46,6 +46,7 @@ class MySQLTestApplication(CharmBase):
         # Charm events
         self.framework.observe(self.on.start, self._on_start)
         self.framework.observe(self.on[PEER].relation_changed, self._on_peer_relation_changed)
+        self.framework.observe(self.on.update_status, self._on_update_status)
 
         # Action handlers
         self.framework.observe(
@@ -349,6 +350,25 @@ class MySQLTestApplication(CharmBase):
     def _get_inserted_data(self, event: ActionEvent) -> None:
         """Get random value inserted into the database."""
         event.set_results({"data": self.app_peer_data.get(RANDOM_VALUE_KEY, "empty")})
+
+    def _on_update_status(self, _) -> None:
+        """Get last written value and update status."""
+        if self.unit_peer_data.get(PROC_PID_KEY):
+            try:
+                value = self._max_written_value()
+                if value > 0:
+                    logger.info(f"Last written {value=}")
+                    if isinstance(self.unit.status, ActiveStatus):
+                        self.unit.status = ActiveStatus(f"Last written {value=}")
+                else:
+                    logger.info("No connection data available")
+            except Exception:
+                logger.info("Unable to get last written value")
+        elif self._database_config:
+            # available connection data
+            self.unit.status = ActiveStatus()
+        else:
+            self.unit.status = WaitingStatus()
 
     def _get_session_ssl_cipher(self, event: ActionEvent) -> None:
         """Get the SSL cipher used by the session.
