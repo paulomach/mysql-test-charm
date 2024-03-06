@@ -16,7 +16,7 @@ on:
 jobs:
   lint:
     name: Lint
-    uses: canonical/data-platform-workflows/.github/workflows/lint.yaml@v2
+    uses: canonical/data-platform-workflows/.github/workflows/lint.yaml@v12
 
   lib-check:
     name: Check libraries
@@ -36,6 +36,7 @@ jobs:
           fail-build: ${{ github.event_name == 'pull_request' }}
 
   build:
-    name: Build charms
-    uses: canonical/data-platform-workflows/.github/workflows/build_charms_with_cache.yaml@v2
-
+    name: Build charm
+    uses: canonical/data-platform-workflows/.github/workflows/build_charm.yaml@v12
+    with:
+      cache: true
