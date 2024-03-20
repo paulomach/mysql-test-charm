@@ -292,7 +292,12 @@ class MySQLTestApplication(CharmBase):
         if not self._database_config:
             return
 
-        self._start_continuous_writes(1)
+        try:
+            value = self._max_written_value() + 1
+        except Exception:
+            value = 1
+
+        self._start_continuous_writes(value)
 
     def _on_stop_continuous_writes_action(self, event: ActionEvent) -> None:
         """Handle the stop continuous writes action event."""
