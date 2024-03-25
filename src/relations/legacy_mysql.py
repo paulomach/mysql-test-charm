@@ -60,7 +60,9 @@ class LegacyMySQL(Object):
 
         database_name = relation_data["database"]
         if database_name != self.charm.database_name:
-            logger.error(f"Database name must be set to `{self.charm.database_name}`. Modify the test.")
+            logger.error(
+                f"Database name must be set to `{self.charm.database_name}`. Modify the test."
+            )
             self.charm.unit.status = BlockedStatus("Wrong database name")
             return
 

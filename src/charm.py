@@ -76,7 +76,9 @@ class MySQLTestApplication(CharmBase):
         )
 
         # Database related events
-        self.database = DatabaseRequires(self, relation_name="database", database_name=self.database_name)
+        self.database = DatabaseRequires(
+            self, relation_name="database", database_name=self.database_name
+        )
         self.framework.observe(
             getattr(self.database.on, "database_created"), self._on_database_created
         )
@@ -122,6 +124,7 @@ class MySQLTestApplication(CharmBase):
 
     @property
     def database_name(self) -> str:
+        """Returns the database name for the continuous writes."""
         return self.config["database_name"]
 
     @property
@@ -274,7 +277,7 @@ class MySQLTestApplication(CharmBase):
     # Handlers
     # ==============
     def _on_config_changed(self, event: EventBase) -> None:
-        """Handle config changes, especially database_name"""
+        """Handle config changes, especially database_name."""
         logger.warning("Please unrelate and re-relate after updating the database_name config")
 
     def _on_start(self, _) -> None:
