@@ -287,7 +287,6 @@ class MySQLTestApplication(CharmBase):
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = WaitingStatus()
-        self.app_peer_data["initialized"] = "true"
 
     def _on_clear_continuous_writes_action(self, _) -> None:
         """Handle the clear continuous writes action event."""
