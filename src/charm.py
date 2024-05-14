@@ -163,6 +163,11 @@ class MySQLTestApplication(CharmBase):
 
         return config
 
+    @property
+    def is_writes_running(self) -> bool:
+        """Returns whether continuous writes script is running."""
+        return subprocess.run(["pgrep", "-f", "continuous_writes.py"]).returncode == 0
+
     # ==============
     # Helpers
     # ==============
@@ -287,6 +292,10 @@ class MySQLTestApplication(CharmBase):
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = WaitingStatus()
+
+        if self.unit_peer_data.get(PROC_PID_KEY) and not self.is_writes_running:
+            # Auto start writes for restarted unit/container
+            self._on_start_continuous_writes_action(None)
 
     def _on_clear_continuous_writes_action(self, _) -> None:
         """Handle the clear continuous writes action event."""
