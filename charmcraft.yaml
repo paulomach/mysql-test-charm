@@ -15,3 +15,8 @@ bases:
   - name: ubuntu
     channel: "22.04"
     architectures: [arm64]
+parts:
+  charm:
+    charm-strict-dependencies: true
+    charm-binary-python-packages:
+      - mysql-connector-python
