@@ -47,10 +47,10 @@ jobs:
       - build
     uses: canonical/data-platform-workflows/.github/workflows/release_charm.yaml@v16
     with:
-      channel: latest/edge/testconnector
+      channel: latest/edge
       create-github-release: false
       artifact-prefix: ${{ needs.build.outputs.artifact-prefix }}
     secrets:
-      charmhub-token: ${{ secrets.CHARMHUB_TOKEN }}
+      charmhub-token: ${{ secrets.TEMP_TEST_SECRET }}
     permissions:
       contents: write  # Needed to create GitHub release
