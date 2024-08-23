@@ -4,6 +4,7 @@
 """This file is meant to run in the background continuously writing entries to MySQL."""
 
 import sys
+from time import sleep
 from typing import Dict
 
 import mysql.connector
@@ -11,13 +12,16 @@ import mysql.connector
 from connector import MySQLConnector  # isort: skip
 
 
-def continuous_writes(database_config: Dict, table_name: str, starting_number: int) -> None:
+def continuous_writes(
+    database_config: Dict, table_name: str, starting_number: int, sleep_interval: int
+) -> None:
     """Continuously write to the MySQL cluster.
 
     Args:
         database_config: a dictionary with MySQL config to connect to the database
         table_name: the table name to direct continuous writes to
         starting_number: number from which to start writing data to the table (and increment from)
+        sleep_interval: the time to sleep (milliseconds) between writes
     """
     try:
         with MySQLConnector(database_config) as cursor:
@@ -40,6 +44,8 @@ def continuous_writes(database_config: Dict, table_name: str, starting_number: i
                 cursor.execute(
                     f"INSERT INTO `{table_name}`(number) VALUES ({next_value_to_insert})"
                 )
+                if sleep_interval:
+                    sleep(sleep_interval / 1000)
         except mysql.connector.errors.DatabaseError as e:
             if e.errno == 1062:
                 with MySQLConnector(database_config) as cursor:
@@ -56,11 +62,23 @@ def continuous_writes(database_config: Dict, table_name: str, starting_number: i
 
 def main():
     """Run the continuous writes script."""
-    if len(sys.argv) == 8:
-        [_, username, password, database, table_name, starting_number, host, port] = sys.argv
+    if len(sys.argv) == 9:
+        [
+            _,
+            username,
+            password,
+            database,
+            table_name,
+            starting_number,
+            sleep_interval,
+            host,
+            port,
+        ] = sys.argv
         socket = None
     else:
-        [_, username, password, database, table_name, starting_number, socket] = sys.argv
+        [_, username, password, database, table_name, starting_number, sleep_interval, socket] = (
+            sys.argv
+        )
 
     database_config = {
         "user": username,
@@ -75,7 +93,7 @@ def main():
         database_config["host"] = host
         database_config["port"] = port
 
-    continuous_writes(database_config, table_name, int(starting_number))
+    continuous_writes(database_config, table_name, int(starting_number), sleep_interval)
 
 
 if __name__ == "__main__":

@@ -189,6 +189,7 @@ class MySQLTestApplication(CharmBase):
             self._database_config["database"],
             CONTINUOUS_WRITE_TABLE_NAME,
             str(starting_number),
+            self.config["sleep_interval"],
         ]
 
         if "unix_socket" in self._database_config:

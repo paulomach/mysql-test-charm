@@ -5,9 +5,10 @@
 
 import logging
 
-from literals import LEGACY_MYSQL_RELATION
 from ops import Object, RelationChangedEvent
 from ops.model import BlockedStatus
+
+from literals import LEGACY_MYSQL_RELATION
 
 logger = logging.getLogger(__name__)
 
