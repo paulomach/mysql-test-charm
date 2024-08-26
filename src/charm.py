@@ -16,7 +16,6 @@ import subprocess
 from typing import Dict, Optional
 
 from charms.data_platform_libs.v0.data_interfaces import DatabaseRequires
-from ops import EventBase
 from ops.charm import ActionEvent, CharmBase
 from ops.main import main
 from ops.model import ActiveStatus, Relation, WaitingStatus
@@ -189,6 +188,7 @@ class MySQLTestApplication(CharmBase):
             self._database_config["database"],
             CONTINUOUS_WRITE_TABLE_NAME,
             str(starting_number),
+            str(self.config["sleep_interval"]),
         ]
 
         if "unix_socket" in self._database_config:
@@ -281,9 +281,12 @@ class MySQLTestApplication(CharmBase):
     # ==============
     # Handlers
     # ==============
-    def _on_config_changed(self, event: EventBase) -> None:
+    def _on_config_changed(self, _) -> None:
         """Handle config changes, especially database_name."""
-        logger.warning("Please unrelate and re-relate after updating the database_name config")
+        if self.is_writes_running:
+            logger.debug("Restarting continuous writes due to config change")
+            self._stop_continuous_writes()
+            self._on_start_continuous_writes_action(None)
 
     def _on_start(self, _) -> None:
         """Handle the start event."""
