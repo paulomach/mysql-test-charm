@@ -74,6 +74,11 @@ class MySQLTestApplication(CharmBase):
             getattr(self.on, "get_server_certificate_action"), self._get_server_certificate
         )
 
+        self.framework.observe(
+            getattr(self.on, "get_client_connection_data_action"),
+            self._on_get_client_connection_data,
+        )
+
         # Database related events
         self.database = DatabaseRequires(
             self, relation_name="database", database_name=self.database_name
@@ -398,6 +403,19 @@ class MySQLTestApplication(CharmBase):
             self.unit.status = ActiveStatus()
         else:
             self.unit.status = WaitingStatus()
+
+    def _on_get_client_connection_data(self, event: ActionEvent) -> None:
+        """Get the user credentials."""
+        if not self._database_config:
+            return event.fail("No database config available")
+
+        event.set_results(
+            {
+                "username": self._database_config["user"],
+                "password": self._database_config["password"],
+                "database": self._database_config["database"],
+            }
+        )
 
     def _get_session_ssl_cipher(self, event: ActionEvent) -> None:
         """Get the SSL cipher used by the session.

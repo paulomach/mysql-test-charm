@@ -29,3 +29,6 @@ get-server-certificate:
 
 get-legacy-mysql-credentials:
   description: Get the credentials for the legacy mysql user
+
+get-client-connection-data:
+  description: Get the client connection data (database, user, password)
