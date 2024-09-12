@@ -348,6 +348,12 @@ class MySQLTestApplication(CharmBase):
 
     def _on_endpoints_changed(self, _) -> None:
         """Handle the database endpoints changed event."""
+        if self.is_writes_running:
+            logger.debug("Restarting continuous writes due to endpoints change")
+            self._stop_continuous_writes()
+            self._on_start_continuous_writes_action(None)
+            return
+
         if self.config["auto_start_writes"]:
             count = self._max_written_value()
             self._start_continuous_writes(count + 1)
