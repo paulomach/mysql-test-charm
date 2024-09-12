@@ -6,7 +6,7 @@
 
 import signal
 
-import mysql.connector
+import mysql.connector as connector
 
 
 def timeout_handler(signum, frame):
@@ -39,7 +39,7 @@ class MySQLConnector:
 
     def __enter__(self):
         """Create the connection and return a cursor."""
-        self.connection = mysql.connector.connect(**self.config)
+        self.connection = connector.connect(**self.config)
         self.cursor = self.connection.cursor()
         signal.signal(signal.SIGALRM, timeout_handler)
         signal.alarm(self.query_timeout)

@@ -21,7 +21,7 @@ from ops.main import main
 from ops.model import ActiveStatus, Relation, WaitingStatus
 from tenacity import RetryError, Retrying, stop_after_delay, wait_fixed
 
-from connector import MySQLConnector  # isort: skip
+from connector import MySQLConnector, connector  # isort: skip
 from literals import (
     CONTINUOUS_WRITE_TABLE_NAME,
     DATABASE_RELATION,
@@ -311,10 +311,13 @@ class MySQLTestApplication(CharmBase):
             return
 
         self._stop_continuous_writes()
-        with MySQLConnector(self._database_config) as cursor:
-            cursor.execute(
-                f"DROP TABLE IF EXISTS `{self.database_name}`.`{CONTINUOUS_WRITE_TABLE_NAME}`;"
-            )
+        try:
+            with MySQLConnector(self._database_config) as cursor:
+                cursor.execute(
+                    f"DROP TABLE IF EXISTS `{self.database_name}`.`{CONTINUOUS_WRITE_TABLE_NAME}`;"
+                )
+        except connector.Error:
+            logger.warning(f"Unable to drop table {CONTINUOUS_WRITE_TABLE_NAME}")
 
     def _on_start_continuous_writes_action(self, _) -> None:
         """Handle the start continuous writes action event."""
