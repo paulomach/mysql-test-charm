@@ -9,6 +9,7 @@ high availability of the MySQL charm.
 """
 
 import logging
+import os
 import re
 import secrets
 import string
@@ -185,8 +186,11 @@ class MySQLTestApplication(CharmBase):
 
         self._stop_continuous_writes()
 
+        current_directory = os.path.dirname(os.path.realpath(__file__))
+        python_binary = os.path.join(current_directory, "../venv/bin/python")
+
         command = [
-            "/usr/bin/python3",
+            python_binary,
             "src/continuous_writes.py",
             self._database_config["user"],
             self._database_config["password"],
