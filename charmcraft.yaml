@@ -10,5 +10,6 @@ platforms:
 parts:
   charm:
     plugin: charm
+    charm-strict-dependencies: true
     charm-binary-python-packages:
       - mysql-connector-python
