@@ -186,7 +186,7 @@ class MySQLTestApplication(CharmBase):
         self._stop_continuous_writes()
 
         command = [
-            "/usr/bin/python3",
+            "venv/bin/python",
             "src/continuous_writes.py",
             self._database_config["user"],
             self._database_config["password"],
